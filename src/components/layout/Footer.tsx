@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { CafbexLogo } from "@/components/brand/CafbexLogo";
-import { VerificationBanner } from "@/components/ui/VerificationBanner";
 import { Container } from "@/components/ui/Container";
 import { FOOTER_NAV, SERVICE_LINKS } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
@@ -13,9 +12,6 @@ export type FooterSettings = {
   email?: string;
   phone?: string;
   address?: string;
-  secondaryEmail?: string;
-  postalAddressUnverified?: boolean;
-  secondaryEmailUnverified?: boolean;
 };
 
 export type FooterProps = {
@@ -60,16 +56,6 @@ export function Footer({ settings, className }: FooterProps) {
       />
 
       <Container className="relative py-14 lg:py-16">
-        {(settings?.postalAddressUnverified || settings?.secondaryEmailUnverified) && (
-          <div className="mb-8">
-            <VerificationBanner
-              postalUnverified={settings?.postalAddressUnverified}
-              emailUnverified={settings?.secondaryEmailUnverified}
-              secondaryEmail={settings?.secondaryEmail}
-            />
-          </div>
-        )}
-
         <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr_1fr_1.1fr]">
           <div>
             <CafbexLogo variant="full" size="md" inverted />

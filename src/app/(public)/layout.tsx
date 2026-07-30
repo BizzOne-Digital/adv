@@ -9,8 +9,6 @@ export default async function PublicLayout({
   children: React.ReactNode;
 }) {
   const settings = await getSettings();
-  const postalPending = settings.dataVerificationWarnings?.postalCodePending ?? true;
-  const emailPending = settings.dataVerificationWarnings?.secondaryEmailPending ?? true;
 
   return (
     <>
@@ -29,9 +27,6 @@ export default async function PublicLayout({
           email: settings.primaryEmail,
           phone: settings.phone,
           address: formatFullAddress(settings),
-          secondaryEmail: settings.secondaryEmail,
-          postalAddressUnverified: postalPending,
-          secondaryEmailUnverified: emailPending,
         }}
       />
     </>
