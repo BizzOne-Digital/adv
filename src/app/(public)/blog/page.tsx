@@ -5,13 +5,12 @@ import { format } from "date-fns";
 import { Container } from "@/components/ui/Container";
 import { CTASection } from "@/components/ui/CTASection";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { ImageGrid } from "@/components/ui/ImageGrid";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getPublishedBlogs } from "@/lib/data";
-import { buildMetadata, pageImages } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo";
 import { idString } from "@/lib/serialize";
 import { resolveCmsImage } from "@/lib/upload/resolve-image";
 import { readingTime } from "@/lib/utils";
@@ -25,7 +24,6 @@ export const metadata: Metadata = buildMetadata({
 
 export default async function BlogPage() {
   const posts = await getPublishedBlogs();
-  const images = pageImages("blog");
 
   return (
     <>
@@ -92,10 +90,6 @@ export default async function BlogPage() {
               })}
             </ul>
           )}
-
-          <Reveal className="mt-14">
-            <ImageGrid images={images} />
-          </Reveal>
         </Container>
       </section>
 
