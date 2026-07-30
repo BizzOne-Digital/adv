@@ -40,7 +40,7 @@ export function ImagePlaceholder({
   const resolved = resolveCmsImage(src);
   const [currentSrc, setCurrentSrc] = useState(resolved);
   const [failed, setFailed] = useState(false);
-  const displayLabel = label ?? src.replace(/^\/images\//, "");
+  const fallbackLabel = label ?? src.replace(/^\/images\//, "");
   const isMongoUpload = currentSrc.startsWith("/api/uploads/");
 
   useEffect(() => {
@@ -95,18 +95,11 @@ export function ImagePlaceholder({
             "flex items-center justify-center",
             fill ? "absolute inset-0" : "aspect-[4/3] w-full",
           )}
-          aria-label={alt || displayLabel}
+          aria-label={alt || fallbackLabel}
         >
           <ImageIcon className="h-10 w-10 text-white/35" aria-hidden />
         </div>
       )}
-
-      {!isMongoUpload ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center gap-2 bg-forest/75 px-2 py-1.5 text-[9px] font-medium uppercase tracking-wider text-white/90 backdrop-blur-sm sm:px-3 sm:py-2 sm:text-[10px]">
-          <ImageIcon className="hidden h-3.5 w-3.5 shrink-0 text-lime sm:block" aria-hidden />
-          <span className="truncate">Replace: {displayLabel}</span>
-        </div>
-      ) : null}
     </div>
   );
 }

@@ -23,7 +23,7 @@ export function PageImageStrip({
   alts,
   eyebrow = "Visuals",
   title = "Moments from the exchange",
-  description = "Replace these placeholders with your own photographs — each page is designed for at least five image placements.",
+  description = "Moments from agricultural exchange, trade dialogue, and community gatherings.",
   className,
   tone = "soft",
 }: PageImageStripProps) {

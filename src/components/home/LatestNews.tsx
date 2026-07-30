@@ -15,6 +15,8 @@ export type NewsPreviewItem = {
   publishedAt: string | Date;
   coverImage?: string;
   category?: string;
+  /** Override article link (e.g. fallback cards → /blog) */
+  href?: string;
 };
 
 export type LatestNewsProps = {
@@ -57,13 +59,14 @@ export function LatestNews({ articles, className }: LatestNewsProps) {
                 typeof article.publishedAt === "string"
                   ? new Date(article.publishedAt)
                   : article.publishedAt;
+              const href = article.href || `/blog/${article.slug}`;
 
               return (
                 <Reveal key={article.id} delay={index * 0.05}>
                   <li>
                     <article className="flex h-full flex-col overflow-hidden border border-border bg-white transition hover:border-agri/40">
                       {article.coverImage ? (
-                        <Link href={`/blog/${article.slug}`} className="relative aspect-[16/10] block">
+                        <Link href={href} className="relative aspect-[16/10] block">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={article.coverImage}
@@ -78,7 +81,7 @@ export function LatestNews({ articles, className }: LatestNewsProps) {
                           {format(date, "MMM d, yyyy")}
                         </p>
                         <h3 className="mt-2 text-lg font-semibold text-forest">
-                          <Link href={`/blog/${article.slug}`} className="hover:text-agri">
+                          <Link href={href} className="hover:text-agri">
                             {article.title}
                           </Link>
                         </h3>
@@ -88,7 +91,7 @@ export function LatestNews({ articles, className }: LatestNewsProps) {
                           </p>
                         ) : null}
                         <Link
-                          href={`/blog/${article.slug}`}
+                          href={href}
                           className="mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-agri"
                         >
                           Read more

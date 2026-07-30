@@ -15,6 +15,8 @@ export type ProductPreviewItem = {
   countryOfOrigin?: string;
   imageSrc?: string;
   featured?: boolean;
+  /** Override detail link (e.g. fallback cards → /products) */
+  href?: string;
 };
 
 export type ProductsPreviewProps = {
@@ -64,7 +66,7 @@ export function ProductsPreview({ products, className }: ProductsPreviewProps) {
               <Reveal key={product.id} delay={index * 0.04}>
                 <li>
                   <Link
-                    href={`/products/${product.slug}`}
+                    href={product.href || `/products/${product.slug}`}
                     className="flex h-full flex-col overflow-hidden border border-border bg-white transition hover:border-agri/40"
                   >
                     <div className="relative aspect-[16/10] bg-forest/5">

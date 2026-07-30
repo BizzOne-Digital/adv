@@ -6,7 +6,6 @@ import { ImageGrid } from "@/components/ui/ImageGrid";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { PageHero } from "@/components/ui/PageHero";
-import { PageImageStrip } from "@/components/ui/PageImageStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getSettings } from "@/lib/data";
@@ -86,7 +85,6 @@ export default async function AboutPage() {
               <ImagePlaceholder
                 src="/images/about/feature.jpg"
                 alt="CAFBEX agricultural exchange"
-                label="about/feature.jpg"
                 className="aspect-[4/3]"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
@@ -102,7 +100,7 @@ export default async function AboutPage() {
       <GreenBand variant="forest">
         <div className="grid gap-6 lg:grid-cols-2">
           <Reveal>
-            <article className="h-full border border-white/15 bg-white/5 p-8 backdrop-blur-sm sm:p-10">
+            <article className="h-full border border-white/15 bg-white/5 p-5 backdrop-blur-sm sm:p-10">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-lime">
                 Mission
               </p>
@@ -112,7 +110,7 @@ export default async function AboutPage() {
             </article>
           </Reveal>
           <Reveal delay={0.08}>
-            <article className="h-full border border-white/15 bg-white/5 p-8 backdrop-blur-sm sm:p-10">
+            <article className="h-full border border-white/15 bg-white/5 p-5 backdrop-blur-sm sm:p-10">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-lime">
                 Vision
               </p>
@@ -157,12 +155,6 @@ export default async function AboutPage() {
           </ul>
         </Container>
       </section>
-
-      <PageImageStrip
-        folder="about"
-        title="Exchange in focus"
-        description="At least five visual placements on this page — swap in your own photography anytime."
-      />
 
       <CTASection
         title="Ready to connect?"

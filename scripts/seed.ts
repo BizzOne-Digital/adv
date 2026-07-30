@@ -749,61 +749,144 @@ async function seedBlogs() {
   await BlogPost.insertMany(
     topics.map((t, i) => ({
       ...t,
-      content: `<p>${t.excerpt}</p><p>This draft will be expanded before publication. It is seeded for editorial planning only.</p>`,
+      content: `<p>${t.excerpt}</p><p>CAFBEX will continue expanding this article with programme updates and verified insights.</p>`,
       categoryIds: [categories[i % categories.length]._id],
-      tags: ["draft", "cafbex"],
+      tags: ["cafbex", "agriculture"],
       authorName: "CAFBEX",
-      featured: false,
-      status: "draft",
+      featured: i < 3,
+      status: i < 3 ? "published" : "draft",
+      publishedAt: i < 3 ? new Date(Date.UTC(2026, 2 + i, 1 + i * 5)) : undefined,
+      coverImage: {
+        url: `/images/blog/0${(i % 5) + 1}.jpg`,
+        alt: t.title,
+      },
       readingTimeMinutes: 3,
     })),
   );
 
-  console.log(`✓ Blog drafts: ${topics.length} (not published)`);
+  console.log(`✓ Blog posts: 3 published, ${topics.length - 3} draft`);
 }
 
 async function seedProducts() {
   await Product.deleteMany({});
   await Product.insertMany([
     {
-      name: "Specialty grains opportunity (draft)",
+      name: "Specialty grains opportunity",
       slug: "specialty-grains-opportunity",
       category: "Grains",
-      countryOfOrigin: "Multiple",
+      countryOfOrigin: "Canada–Africa corridor",
       summary:
-        "Draft placeholder for specialty grain exchange conversations between Canadian and African partners.",
+        "Informational listing for specialty grain exchange conversations between Canadian and African partners.",
       description:
-        "This product card is inactive and not shown publicly. Replace with verified offering details before activating.",
-      status: "inactive",
-      featured: false,
+        "This catalogue card supports Request Information inquiries only. CAFBEX does not operate a checkout storefront. Contact the team for verified details.",
+      images: [{ url: "/images/products/01.jpg", alt: "Specialty grains" }],
+      status: "active",
+      featured: true,
       order: 1,
     },
     {
-      name: "Processed foods inquiry (draft)",
+      name: "Value-added foods inquiry",
       slug: "processed-foods-inquiry",
       category: "Processed foods",
+      countryOfOrigin: "Multiple",
       summary:
-        "Draft placeholder for value-added food products seeking partnership or buyer dialogue.",
+        "Pathway for processed and value-added food products seeking partnership or buyer dialogue.",
       description:
-        "Inactive draft. Activate only with accurate supplier, certification, and availability information.",
-      status: "inactive",
-      featured: false,
+        "Informational only. Activate further detail via Admin when supplier and certification information is verified.",
+      images: [{ url: "/images/products/02.jpg", alt: "Value-added foods" }],
+      status: "active",
+      featured: true,
       order: 2,
     },
     {
-      name: "Agri-inputs dialogue (draft)",
+      name: "Agri-inputs dialogue",
       slug: "agri-inputs-dialogue",
       category: "Inputs",
+      countryOfOrigin: "Multiple",
       summary:
-        "Draft placeholder for agricultural inputs discussion — not a live catalog listing.",
+        "Informational card for agricultural inputs discussion — contact CAFBEX for opportunities.",
       description:
-        "Kept inactive until content is verified. CAFBEX is not operating a checkout storefront.",
-      status: "inactive",
-      featured: false,
+        "CAFBEX facilitates dialogue. This is not a live e-commerce listing.",
+      images: [{ url: "/images/products/03.jpg", alt: "Agricultural inputs" }],
+      status: "active",
+      featured: true,
       order: 3,
     },
   ]);
-  console.log("✓ Draft products: 3 (inactive)");
+  console.log("✓ Products: 3 active featured");
+}
+
+async function seedTestimonials() {
+  const { Testimonial } = await import("../src/models/Testimonial");
+  await Testimonial.deleteMany({});
+  await Testimonial.insertMany([
+    {
+      name: "Programme participant",
+      role: "Agribusiness lead",
+      organization: "Sample reflection",
+      quote:
+        "CAFBEX creates a respectful space where farmers and agribusinesses from Canada and Africa can learn from each other and explore real partnership pathways.",
+      featured: true,
+      approved: true,
+      isSample: true,
+      order: 1,
+    },
+    {
+      name: "Farmer cooperative representative",
+      role: "Producer",
+      organization: "Sample reflection",
+      quote:
+        "The exchange format helped us understand climate-smart practices in different contexts — not as a one-size solution, but as adaptable ideas for our own farms.",
+      featured: true,
+      approved: true,
+      isSample: true,
+      order: 2,
+    },
+    {
+      name: "Trade dialogue attendee",
+      role: "Exporter",
+      organization: "Sample reflection",
+      quote:
+        "Clear conversations about trade readiness and networking made it easier to know what questions to ask before pursuing cross-border opportunities.",
+      featured: true,
+      approved: true,
+      isSample: true,
+      order: 3,
+    },
+  ]);
+  console.log("✓ Testimonials: 3 sample (labelled)");
+}
+
+async function seedGallery() {
+  const { GalleryItem } = await import("../src/models/GalleryItem");
+  await GalleryItem.deleteMany({});
+  const items = [
+    { title: "Conference exchange", slug: "conference-exchange", category: "Events", file: "01.jpg", caption: "Agricultural conference moments" },
+    { title: "Farm visit", slug: "farm-visit", category: "Field", file: "02.jpg", caption: "Guided farm visits" },
+    { title: "Technology demo", slug: "technology-demo", category: "Technology", file: "03.jpg", caption: "Agri-tech demonstrations" },
+    { title: "Exhibition floor", slug: "exhibition-floor", category: "Trade", file: "04.jpg", caption: "Exhibition booths and produce" },
+    { title: "Networking", slug: "networking-moment", category: "Networking", file: "05.jpg", caption: "Partnership conversations" },
+    { title: "Training session", slug: "training-session", category: "Training", file: "06.jpg", caption: "Learning together" },
+    { title: "Trade fair aisle", slug: "trade-fair", category: "Trade", file: "07.jpg", caption: "Trade fair atmosphere" },
+    { title: "Community gathering", slug: "community-gathering", category: "Community", file: "08.jpg", caption: "Community celebration" },
+  ];
+  await GalleryItem.insertMany(
+    items.map((item, i) => ({
+      title: item.title,
+      slug: item.slug,
+      caption: item.caption,
+      category: item.category,
+      mediaType: "image",
+      media: {
+        url: `/images/gallery/${item.file}`,
+        alt: item.title,
+      },
+      status: "published",
+      featured: i < 6,
+      order: i + 1,
+    })),
+  );
+  console.log(`✓ Gallery: ${items.length} published`);
 }
 
 async function seedTeam() {
@@ -908,11 +991,13 @@ async function main() {
   await seedFaqs();
   await seedBlogs();
   await seedProducts();
+  await seedGallery();
+  await seedTestimonials();
   await seedTeam();
   await seedPricing();
 
   console.log("\nSeed complete.");
-  console.log("NOT seeded as published: events, testimonials, partners.");
+  console.log("Sample testimonials are labelled as sample content.");
   console.log(`\nLogin: ${ADMIN_EMAIL}`);
   console.log("Password: (ADMIN_PASSWORD from env, or default ChangeMeNow123!)");
 

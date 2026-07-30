@@ -21,6 +21,12 @@ import {
   getPublishedBlogs,
   getSettings,
 } from "@/lib/data";
+import {
+  FALLBACK_ARTICLES,
+  FALLBACK_GALLERY,
+  FALLBACK_PRODUCTS,
+  FALLBACK_TESTIMONIALS,
+} from "@/lib/home-fallbacks";
 import { PageImageStrip } from "@/components/ui/PageImageStrip";
 import { buildMetadata } from "@/lib/seo";
 import { idString } from "@/lib/serialize";
@@ -47,6 +53,56 @@ export default async function HomePage() {
       getApprovedTestimonials({ limit: 6 }),
     ]);
 
+  const galleryItems =
+    gallery.length > 0
+      ? gallery.map((g) => ({
+          id: idString(g),
+          src: resolveCmsImage(g.media?.url, `/images/gallery/${g.slug}.jpg`),
+          alt: g.media?.alt || g.title,
+          caption: g.caption,
+          category: g.category,
+        }))
+      : [...FALLBACK_GALLERY];
+
+  const productItems =
+    products.length > 0
+      ? products.map((p) => ({
+          id: idString(p),
+          name: p.name,
+          slug: p.slug,
+          summary: p.summary,
+          category: p.category,
+          countryOfOrigin: p.countryOfOrigin,
+          imageSrc: resolveCmsImage(p.images?.[0]?.url, `/images/products/01.jpg`),
+          featured: p.featured,
+        }))
+      : [...FALLBACK_PRODUCTS];
+
+  const testimonialItems =
+    testimonials.length > 0
+      ? testimonials.map((t) => ({
+          id: idString(t),
+          quote: t.quote,
+          authorName: t.name,
+          authorRole: t.role,
+          organization: t.organization,
+          isSample: t.isSample,
+        }))
+      : [...FALLBACK_TESTIMONIALS];
+
+  const articleItems =
+    blogs.length > 0
+      ? blogs.map((b) => ({
+          id: idString(b),
+          title: b.title,
+          slug: b.slug,
+          excerpt: b.excerpt,
+          publishedAt: b.publishedAt || b.createdAt,
+          coverImage: resolveCmsImage(b.coverImage?.url, "/images/blog/01.jpg"),
+          category: undefined as string | undefined,
+        }))
+      : [...FALLBACK_ARTICLES];
+
   return (
     <>
       {settings.introEnabled ? <CinematicIntro /> : null}
@@ -68,15 +124,7 @@ export default async function HomePage() {
           category: e.category,
         }))}
       />
-      <GalleryPreview
-        items={gallery.map((g) => ({
-          id: idString(g),
-          src: resolveCmsImage(g.media?.url, `/images/gallery/${g.slug}.jpg`),
-          alt: g.media?.alt || g.title,
-          caption: g.caption,
-          category: g.category,
-        }))}
-      />
+      <GalleryPreview items={galleryItems} />
       <PageImageStrip
         folder="home"
         eyebrow="Landscapes"
@@ -91,38 +139,9 @@ export default async function HomePage() {
           "Trade and networking",
         ]}
       />
-      <ProductsPreview
-        products={products.map((p) => ({
-          id: idString(p),
-          name: p.name,
-          slug: p.slug,
-          summary: p.summary,
-          category: p.category,
-          countryOfOrigin: p.countryOfOrigin,
-          imageSrc: resolveCmsImage(p.images?.[0]?.url),
-          featured: p.featured,
-        }))}
-      />
-      <TestimonialsPreview
-        testimonials={testimonials.map((t) => ({
-          id: idString(t),
-          quote: t.quote,
-          authorName: t.name,
-          authorRole: t.role,
-          organization: t.organization,
-          isSample: t.isSample,
-        }))}
-      />
-      <LatestNews
-        articles={blogs.map((b) => ({
-          id: idString(b),
-          title: b.title,
-          slug: b.slug,
-          excerpt: b.excerpt,
-          publishedAt: b.publishedAt || b.createdAt,
-          coverImage: b.coverImage?.url,
-        }))}
-      />
+      <ProductsPreview products={productItems} />
+      <TestimonialsPreview testimonials={testimonialItems} />
+      <LatestNews articles={articleItems} />
       <FinalCTA />
     </>
   );
