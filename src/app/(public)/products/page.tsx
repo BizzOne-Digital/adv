@@ -4,13 +4,12 @@ import { Package } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { CTASection } from "@/components/ui/CTASection";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { ImageGrid } from "@/components/ui/ImageGrid";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getProducts } from "@/lib/data";
-import { buildMetadata, pageImages } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo";
 import { idString } from "@/lib/serialize";
 import { resolveCmsImage } from "@/lib/upload/resolve-image";
 
@@ -23,7 +22,6 @@ export const metadata: Metadata = buildMetadata({
 
 export default async function ProductsPage() {
   const products = await getProducts();
-  const images = pageImages("products");
   const categories = Array.from(new Set(products.map((p) => p.category))).sort();
 
   return (
@@ -101,10 +99,6 @@ export default async function ProductsPage() {
               ))}
             </ul>
           )}
-
-          <Reveal className="mt-14">
-            <ImageGrid images={images} />
-          </Reveal>
         </Container>
       </section>
 
