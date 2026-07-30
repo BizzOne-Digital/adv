@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0B3D2E"/>
+      <stop offset="100%" style="stop-color:#E8C547"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#g)"/>
+  <circle cx="400" cy="300" r="180" fill="#C6FF4E" opacity="0.12"/>
+  <circle cx="1200" cy="700" r="220" fill="#E8C547" opacity="0.1"/>
+  <path d="M100 800 Q800 500 1500 750" stroke="#C6FF4E" stroke-width="3" fill="none" opacity="0.35"/>
+  <text x="80" y="920" fill="white" font-family="Arial,sans-serif" font-size="36" opacity="0.85">CAFBEX / booking / 02 — replace with your photo</text>
+</svg>
