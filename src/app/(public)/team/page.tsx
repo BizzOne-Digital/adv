@@ -63,7 +63,6 @@ export default async function TeamPage() {
                         <ImagePlaceholder
                           src={member.image?.url || `/images/team/${member.slug}.jpg`}
                           alt={member.name}
-                          label={member.name}
                           className="aspect-[4/5]"
                         />
                         <div className="p-5">
@@ -90,7 +89,6 @@ export default async function TeamPage() {
                         <ImagePlaceholder
                           src={member.image?.url || `/images/team/${member.slug}.jpg`}
                           alt={member.name}
-                          label={member.name}
                           className="aspect-square"
                         />
                         <div className="p-4">

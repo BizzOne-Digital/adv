@@ -114,7 +114,6 @@ export default async function ProductDetailPage({ params }: Props) {
                   key={img.url}
                   src={img.url}
                   alt={img.alt || product.name}
-                  label={img.caption || product.name}
                   className="aspect-[4/3]"
                 />
               ))}

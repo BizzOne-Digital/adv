@@ -1,7 +1,5 @@
 "use client";
 
-/* Image captions/overlays removed for production. */
-
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,7 +10,6 @@ export type ImagePlaceholderProps = {
   /** Path under /public or /api/uploads/... */
   src: string;
   alt: string;
-  label?: string;
   className?: string;
   fill?: boolean;
   width?: number;
@@ -31,7 +28,6 @@ function svgFallback(path: string): string | null {
 export function ImagePlaceholder({
   src,
   alt,
-  label,
   className,
   fill = true,
   width,
@@ -42,7 +38,6 @@ export function ImagePlaceholder({
   const resolved = resolveCmsImage(src);
   const [currentSrc, setCurrentSrc] = useState(resolved);
   const [failed, setFailed] = useState(false);
-  const fallbackLabel = label ?? src.replace(/^\/images\//, "");
   const isMongoUpload = currentSrc.startsWith("/api/uploads/");
 
   useEffect(() => {
@@ -97,7 +92,7 @@ export function ImagePlaceholder({
             "flex items-center justify-center",
             fill ? "absolute inset-0" : "aspect-[4/3] w-full",
           )}
-          aria-label={alt || fallbackLabel}
+          aria-label={alt || "Image"}
         >
           <ImageIcon className="h-10 w-10 text-white/35" aria-hidden />
         </div>

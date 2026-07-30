@@ -68,7 +68,6 @@ export default async function EventsPage() {
                       <ImagePlaceholder
                         src={event.images?.[0]?.url || `/images/events/${event.slug}.jpg`}
                         alt={event.title}
-                        label={`events/${event.slug}`}
                         className="aspect-[16/10]"
                       />
                       <div className="flex flex-1 flex-col p-5">

@@ -52,21 +52,20 @@ export function pageImages(
     "Visual 5",
   ],
 ): [
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
 ] {
   return [1, 2, 3, 4, 5].map((n, i) => ({
     src: `/images/${folder}/${String(n).padStart(2, "0")}.jpg`,
     alt: alts[i] ?? `Image ${n}`,
-    label: `${folder}/${String(n).padStart(2, "0")}.jpg`,
   })) as [
-    { src: string; alt: string; label: string },
-    { src: string; alt: string; label: string },
-    { src: string; alt: string; label: string },
-    { src: string; alt: string; label: string },
-    { src: string; alt: string; label: string },
+    { src: string; alt: string },
+    { src: string; alt: string },
+    { src: string; alt: string },
+    { src: string; alt: string },
+    { src: string; alt: string },
   ];
 }

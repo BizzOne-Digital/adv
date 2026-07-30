@@ -42,7 +42,6 @@ export function ServicesPreview({ className }: ServicesPreviewProps) {
                 <ImagePlaceholder
                   src={`/images/services/${slug}/01.jpg`}
                   alt={service.label}
-                  label={`services/${slug}/01.jpg`}
                   className="aspect-[16/10]"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />

@@ -67,7 +67,6 @@ export default async function BlogPage() {
                               `/images/blog/${post.slug}.jpg`,
                             )}
                             alt={post.title}
-                            label={post.title}
                             className="absolute inset-0 h-full w-full"
                           />
                         </Link>

@@ -110,7 +110,6 @@ export default async function EventDetailPage({ params }: Props) {
                   key={img.url}
                   src={img.url}
                   alt={img.alt || event.title}
-                  label={img.caption || "event image"}
                   className="aspect-[4/3]"
                 />
               ))}

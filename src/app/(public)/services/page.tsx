@@ -73,7 +73,6 @@ export default async function ServicesPage() {
                 <ImagePlaceholder
                   src={`/images/services/${service.slug}/01.jpg`}
                   alt={service.name}
-                  label={`services/${service.slug}/01.jpg`}
                   className="aspect-[16/10]"
                   sizes="(max-width: 1024px) 50vw, 25vw"
                 />

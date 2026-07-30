@@ -77,7 +77,6 @@ export default async function BlogPostPage({ params }: Props) {
                   key={img.url}
                   src={img.url}
                   alt={img.alt || post.title}
-                  label={img.caption || "inline image"}
                   className="aspect-[4/3]"
                 />
               ))}

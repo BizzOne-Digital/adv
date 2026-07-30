@@ -442,17 +442,17 @@ export function resolveServicePage(
 }
 
 export function serviceImageSlots(folder: string): [
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
-  { src: string; alt: string; label: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
+  { src: string; alt: string },
 ] {
   return [
-    { src: `/images/${folder}/01.jpg`, alt: "Service visual 1", label: `${folder}/01.jpg` },
-    { src: `/images/${folder}/02.jpg`, alt: "Service visual 2", label: `${folder}/02.jpg` },
-    { src: `/images/${folder}/03.jpg`, alt: "Service visual 3", label: `${folder}/03.jpg` },
-    { src: `/images/${folder}/04.jpg`, alt: "Service visual 4", label: `${folder}/04.jpg` },
-    { src: `/images/${folder}/05.jpg`, alt: "Service visual 5", label: `${folder}/05.jpg` },
+    { src: `/images/${folder}/01.jpg`, alt: "Service visual 1" },
+    { src: `/images/${folder}/02.jpg`, alt: "Service visual 2" },
+    { src: `/images/${folder}/03.jpg`, alt: "Service visual 3" },
+    { src: `/images/${folder}/04.jpg`, alt: "Service visual 4" },
+    { src: `/images/${folder}/05.jpg`, alt: "Service visual 5" },
   ];
 }

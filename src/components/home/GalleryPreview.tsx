@@ -55,7 +55,6 @@ export function GalleryPreview({ items, className }: GalleryPreviewProps) {
                   key={n}
                   src={`/images/gallery/preview-${n}.jpg`}
                   alt={`Gallery placeholder ${n}`}
-                  label={`gallery/preview-${n}.jpg`}
                   className="aspect-[4/3]"
                   sizes="(max-width: 640px) 100vw, 33vw"
                 />

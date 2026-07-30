@@ -80,7 +80,6 @@ export default async function ProductsPage() {
                           `/images/products/${product.slug}.jpg`,
                         )}
                         alt={product.name}
-                        label={product.name}
                         className="aspect-[4/3]"
                       />
                       <div className="flex flex-1 flex-col p-5">

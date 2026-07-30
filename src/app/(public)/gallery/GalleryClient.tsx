@@ -84,7 +84,6 @@ export function GalleryClient({ items }: { items: GalleryClientItem[] }) {
                   <ImagePlaceholder
                     src={item.src}
                     alt={item.alt}
-                    label={item.caption || item.category}
                     className="aspect-[4/5] sm:aspect-auto sm:min-h-[220px]"
                   />
                   <p className="mt-2 text-sm font-medium text-forest">
