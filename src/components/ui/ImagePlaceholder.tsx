@@ -1,5 +1,7 @@
 "use client";
 
+/* Image captions/overlays removed for production. */
+
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
