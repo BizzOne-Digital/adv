@@ -6,7 +6,6 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { GreenBand } from "@/components/ui/GreenBand";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { PageHero } from "@/components/ui/PageHero";
-import { PageImageStrip } from "@/components/ui/PageImageStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getTeam } from "@/lib/data";
@@ -104,12 +103,6 @@ export default async function TeamPage() {
           </>
         )}
       </GreenBand>
-
-      <PageImageStrip
-        folder="team"
-        title="Team and exchange"
-        description="Five visual placements for the team page — replace with confirmed photographs when available."
-      />
 
       <CTASection
         title="Join or advise the mission"
