@@ -893,34 +893,43 @@ async function seedTeam() {
   await TeamMember.deleteMany({});
   await TeamMember.insertMany([
     {
-      name: "Leadership placeholder",
-      slug: "leadership-placeholder",
-      role: "To be confirmed",
-      bio: "Draft team profile. Publish only after name, role, and photo are verified.",
+      name: "adv. mwanjara, a.a",
+      slug: "adv-mwanjara",
+      role: "Founder/CEO",
+      image: { url: "/images/team/adv-mwanjara.png", alt: "adv. mwanjara, a.a" },
       isLeadership: true,
-      status: "draft",
+      status: "published",
       order: 1,
     },
     {
-      name: "Programs placeholder",
-      slug: "programs-placeholder",
-      role: "Programs coordination (draft)",
-      bio: "Placeholder for programs coordination profile.",
-      isLeadership: false,
-      status: "draft",
+      name: "Jacqueline Musyimi",
+      slug: "jacqueline-musyimi",
+      role: "Chief Operating Officer",
+      image: { url: "/images/team/jacqueline-musyimi.png", alt: "Jacqueline Musyimi" },
+      isLeadership: true,
+      status: "published",
       order: 2,
     },
     {
-      name: "Partnerships placeholder",
-      slug: "partnerships-placeholder",
-      role: "Partnerships (draft)",
-      bio: "Placeholder for partnerships profile.",
+      name: "Anna Mwakapala",
+      slug: "anna-mwakapala",
+      role: "Event Manager",
+      image: { url: "/images/team/anna-mwakapala.png", alt: "Anna Mwakapala" },
       isLeadership: false,
-      status: "draft",
+      status: "published",
       order: 3,
     },
+    {
+      name: "Namlita C. Yahaya",
+      slug: "namlita-c-yahaya",
+      role: "Tanzania Representative",
+      image: { url: "/images/team/namlita-c-yahaya.png", alt: "Namlita C. Yahaya" },
+      isLeadership: false,
+      status: "published",
+      order: 4,
+    },
   ]);
-  console.log("✓ Team placeholders: 3 (draft, not published)");
+  console.log("✓ Team: 4 published members");
 }
 
 async function seedPricing() {

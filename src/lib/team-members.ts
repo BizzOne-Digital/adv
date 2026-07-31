@@ -1,0 +1,43 @@
+/** Confirmed CAFBEX team — used as seed + public fallback when DB is empty. */
+export const CAFBEX_TEAM = [
+  {
+    id: "team-mwanjara",
+    name: "adv. mwanjara, a.a",
+    slug: "adv-mwanjara",
+    role: "Founder/CEO",
+    bio: "",
+    imageUrl: "/images/team/adv-mwanjara.png",
+    isLeadership: true,
+    order: 1,
+  },
+  {
+    id: "team-jacqueline",
+    name: "Jacqueline Musyimi",
+    slug: "jacqueline-musyimi",
+    role: "Chief Operating Officer",
+    bio: "",
+    imageUrl: "/images/team/jacqueline-musyimi.png",
+    isLeadership: true,
+    order: 2,
+  },
+  {
+    id: "team-anna",
+    name: "Anna Mwakapala",
+    slug: "anna-mwakapala",
+    role: "Event Manager",
+    bio: "",
+    imageUrl: "/images/team/anna-mwakapala.png",
+    isLeadership: false,
+    order: 3,
+  },
+  {
+    id: "team-namlita",
+    name: "Namlita C. Yahaya",
+    slug: "namlita-c-yahaya",
+    role: "Tanzania Representative",
+    bio: "",
+    imageUrl: "/images/team/namlita-c-yahaya.png",
+    isLeadership: false,
+    order: 4,
+  },
+] as const;

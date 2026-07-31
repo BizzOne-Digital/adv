@@ -11,16 +11,47 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getTeam } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 import { idString } from "@/lib/serialize";
+import { CAFBEX_TEAM } from "@/lib/team-members";
+import { resolveCmsImage } from "@/lib/upload/resolve-image";
 
 export const metadata: Metadata = buildMetadata({
   title: "Team",
   description:
-    "Meet the CAFBEX team. Profiles appear here only when published — we do not invent members.",
+    "Meet the CAFBEX team — leadership and representatives advancing Canada–Africa agricultural exchange.",
   path: "/team",
 });
 
+type TeamCard = {
+  id: string;
+  name: string;
+  role: string;
+  bio?: string;
+  imageSrc: string;
+  isLeadership: boolean;
+};
+
 export default async function TeamPage() {
-  const team = await getTeam();
+  const dbTeam = await getTeam();
+
+  const team: TeamCard[] =
+    dbTeam.length > 0
+      ? dbTeam.map((m) => ({
+          id: idString(m),
+          name: m.name,
+          role: m.role,
+          bio: m.bio,
+          imageSrc: resolveCmsImage(m.image?.url, `/images/team/${m.slug}.jpg`),
+          isLeadership: Boolean(m.isLeadership),
+        }))
+      : CAFBEX_TEAM.map((m) => ({
+          id: m.id,
+          name: m.name,
+          role: m.role,
+          bio: m.bio || undefined,
+          imageSrc: m.imageUrl,
+          isLeadership: m.isLeadership,
+        }));
+
   const leadership = team.filter((m) => m.isLeadership);
   const members = team.filter((m) => !m.isLeadership);
 
@@ -29,7 +60,7 @@ export default async function TeamPage() {
       <PageHero
         eyebrow="Team"
         title="People behind the exchange"
-        subtitle="Team profiles are published when names, roles, and photographs are confirmed."
+        subtitle="Leadership and representatives advancing Canada–Africa agricultural partnerships."
         imageSrc="/images/team/hero.jpg"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Team" }]}
       />
@@ -40,7 +71,7 @@ export default async function TeamPage() {
             icon={Users}
             className="border border-dashed border-border bg-white"
             title="Team profiles coming soon"
-            description="We do not invent team members. Published leadership and staff profiles will appear here once approved."
+            description="Published leadership and staff profiles will appear here once approved."
             action={
               <Link
                 href="/contact"
@@ -55,12 +86,12 @@ export default async function TeamPage() {
             {leadership.length > 0 ? (
               <div>
                 <SectionHeading eyebrow="Leadership" title="Leadership" />
-                <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
                   {leadership.map((member, i) => (
-                    <Reveal key={idString(member)} delay={i * 0.05}>
+                    <Reveal key={member.id} delay={i * 0.05}>
                       <li className="overflow-hidden border border-border bg-white">
                         <ImagePlaceholder
-                          src={member.image?.url || `/images/team/${member.slug}.jpg`}
+                          src={member.imageSrc}
                           alt={member.name}
                           className="aspect-[4/5]"
                         />
@@ -79,20 +110,23 @@ export default async function TeamPage() {
             ) : null}
 
             {members.length > 0 ? (
-              <div className="mt-16">
+              <div className={leadership.length > 0 ? "mt-16" : undefined}>
                 <SectionHeading eyebrow="Team" title="Team members" />
-                <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
                   {members.map((member, i) => (
-                    <Reveal key={idString(member)} delay={i * 0.04}>
+                    <Reveal key={member.id} delay={i * 0.04}>
                       <li className="overflow-hidden border border-border bg-white">
                         <ImagePlaceholder
-                          src={member.image?.url || `/images/team/${member.slug}.jpg`}
+                          src={member.imageSrc}
                           alt={member.name}
-                          className="aspect-square"
+                          className="aspect-[4/5]"
                         />
-                        <div className="p-4">
-                          <h3 className="font-semibold text-forest">{member.name}</h3>
-                          <p className="mt-1 text-sm text-muted">{member.role}</p>
+                        <div className="p-5">
+                          <h3 className="text-lg font-semibold text-forest">{member.name}</h3>
+                          <p className="mt-1 text-sm text-agri">{member.role}</p>
+                          {member.bio ? (
+                            <p className="mt-3 text-sm leading-relaxed text-muted">{member.bio}</p>
+                          ) : null}
                         </div>
                       </li>
                     </Reveal>
