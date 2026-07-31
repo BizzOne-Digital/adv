@@ -29,17 +29,12 @@ const CONTACT_FAQS = [
   {
     question: "What is the best way to reach CAFBEX?",
     answer:
-      "Email mwanjaraa@gmail.com or use the inquiry form on this page. For meetings, use the booking form.",
+      "Email shambacanada@gamil.com or use the inquiry form on this page. For meetings, use the booking form.",
   },
   {
     question: "Is the postal code verified?",
     answer:
       "The postal code on file is pending independent verification and may be updated (possible M5A 1S1).",
-  },
-  {
-    question: "Is the secondary email verified?",
-    answer:
-      "The secondary address is pending verification and may contain a domain typo (gamil vs gmail).",
   },
 ];
 
@@ -100,21 +95,23 @@ export default async function ContactPage({ searchParams }: Props) {
                 >
                   <Mail className="mt-0.5 h-4 w-4 text-agri" />
                   <span>
-                    <span className="block font-medium text-forest">Primary email</span>
+                    <span className="block font-medium text-forest">Email</span>
                     {settings.primaryEmail}
                   </span>
                 </a>
               </li>
-              <li className="inline-flex items-start gap-3">
-                <Mail className="mt-0.5 h-4 w-4 text-wheat" />
-                <span>
-                  <span className="block font-medium text-forest">Secondary email</span>
-                  {settings.secondaryEmail || CONTACT.secondaryEmail}
-                  {emailPending ? (
-                    <span className="mt-1 block text-xs text-soil">Pending verification</span>
-                  ) : null}
-                </span>
-              </li>
+              {settings.secondaryEmail || CONTACT.secondaryEmail ? (
+                <li className="inline-flex items-start gap-3">
+                  <Mail className="mt-0.5 h-4 w-4 text-wheat" />
+                  <span>
+                    <span className="block font-medium text-forest">Secondary email</span>
+                    {settings.secondaryEmail || CONTACT.secondaryEmail}
+                    {emailPending ? (
+                      <span className="mt-1 block text-xs text-soil">Pending verification</span>
+                    ) : null}
+                  </span>
+                </li>
+              ) : null}
               <li>
                 <a
                   href={`tel:${CONTACT.phoneTel}`}

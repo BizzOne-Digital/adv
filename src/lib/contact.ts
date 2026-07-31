@@ -5,9 +5,9 @@
 export const CONTACT = {
   organizationName: "Canada–Africa Farmers Business Exchange",
   shortName: "CAFBEX",
-  primaryEmail: "mwanjaraa@gmail.com",
+  primaryEmail: "shambacanada@gamil.com",
   /** Pending verification — possible typo in domain (gamil vs gmail). */
-  secondaryEmail: "shambacanada@gamil.com",
+  secondaryEmail: "",
   phone: "+1 437-873-7675",
   phoneTel: "+14378737675",
   addressLine: "163 Queen Street East",

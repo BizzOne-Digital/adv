@@ -29,7 +29,7 @@ const DEFAULTS: Required<
   shortName: "CAFBEX",
   missionSnippet:
     "Building lasting partnerships between Canada and Africa through agricultural knowledge exchange, trade, investment, and technology.",
-  email: "mwanjaraa@gmail.com",
+  email: "shambacanada@gamil.com",
   phone: "+1 437-873-7675",
   address: "163 Queen Street East, Toronto",
 };
