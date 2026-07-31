@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { SiteMusic } from "@/components/layout/SiteMusic";
 import { formatFullAddress } from "@/lib/contact";
 import { getSettings } from "@/lib/data";
 
@@ -29,6 +30,7 @@ export default async function PublicLayout({
           address: formatFullAddress(settings),
         }}
       />
+      <SiteMusic />
     </>
   );
 }
