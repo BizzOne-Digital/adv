@@ -893,10 +893,10 @@ async function seedTeam() {
   await TeamMember.deleteMany({});
   await TeamMember.insertMany([
     {
-      name: "adv. mwanjara, a.a",
+      name: "Adv. Mwanjara.A.A",
       slug: "adv-mwanjara",
       role: "Founder/CEO",
-      image: { url: "/images/team/adv-mwanjara.png", alt: "adv. mwanjara, a.a" },
+      image: { url: "/images/team/adv-mwanjara.png", alt: "Adv. Mwanjara.A.A" },
       isLeadership: true,
       status: "published",
       order: 1,

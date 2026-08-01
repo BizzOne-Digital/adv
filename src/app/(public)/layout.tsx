@@ -25,7 +25,6 @@ export default async function PublicLayout({
           organizationName: settings.organizationName,
           shortName: settings.shortName,
           missionSnippet: settings.mission,
-          email: settings.primaryEmail,
           phone: settings.phone,
           address: formatFullAddress(settings),
         }}

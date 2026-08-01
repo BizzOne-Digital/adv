@@ -2,7 +2,7 @@
 export const CAFBEX_TEAM = [
   {
     id: "team-mwanjara",
-    name: "adv. mwanjara, a.a",
+    name: "Adv. Mwanjara.A.A",
     slug: "adv-mwanjara",
     role: "Founder/CEO",
     bio: "",

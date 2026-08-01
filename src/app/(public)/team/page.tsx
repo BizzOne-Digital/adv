@@ -32,17 +32,24 @@ type TeamCard = {
 
 export default async function TeamPage() {
   const dbTeam = await getTeam();
+  const confirmedBySlug = new Map(CAFBEX_TEAM.map((m) => [m.slug, m]));
 
   const team: TeamCard[] =
     dbTeam.length > 0
-      ? dbTeam.map((m) => ({
-          id: idString(m),
-          name: m.name,
-          role: m.role,
-          bio: m.bio,
-          imageSrc: resolveCmsImage(m.image?.url, `/images/team/${m.slug}.jpg`),
-          isLeadership: Boolean(m.isLeadership),
-        }))
+      ? dbTeam.map((m) => {
+          const confirmed = confirmedBySlug.get(m.slug);
+          return {
+            id: idString(m),
+            name: confirmed?.name ?? m.name,
+            role: confirmed?.role ?? m.role,
+            bio: m.bio,
+            imageSrc: resolveCmsImage(
+              m.image?.url,
+              confirmed?.imageUrl ?? `/images/team/${m.slug}.jpg`,
+            ),
+            isLeadership: Boolean(m.isLeadership),
+          };
+        })
       : CAFBEX_TEAM.map((m) => ({
           id: m.id,
           name: m.name,

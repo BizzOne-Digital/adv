@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Accordion } from "@/components/ui/Accordion";
 import { Container } from "@/components/ui/Container";
@@ -17,7 +17,7 @@ import type { InquiryInput } from "@/lib/validations";
 export const metadata: Metadata = buildMetadata({
   title: "Contact",
   description:
-    "Contact CAFBEX in Toronto — email, phone, and inquiry forms for farmers, agribusiness, investment, partnership, and media.",
+    "Contact CAFBEX in Toronto — phone and inquiry forms for farmers, agribusiness, investment, partnership, and media.",
   path: "/contact",
 });
 
@@ -29,7 +29,7 @@ const CONTACT_FAQS = [
   {
     question: "What is the best way to reach CAFBEX?",
     answer:
-      "Email shambacanada@gamil.com or use the inquiry form on this page. For meetings, use the booking form.",
+      "Use the inquiry form on this page. For meetings, use the booking form.",
   },
   {
     question: "Is the postal code verified?",
@@ -50,7 +50,6 @@ export default async function ContactPage({ searchParams }: Props) {
     : "general";
 
   const postalPending = settings.dataVerificationWarnings?.postalCodePending ?? true;
-  const emailPending = settings.dataVerificationWarnings?.secondaryEmailPending ?? true;
   const mapQuery = encodeURIComponent(
     formatFullAddress({
       address: settings.address,
@@ -75,8 +74,6 @@ export default async function ContactPage({ searchParams }: Props) {
         <VerificationBanner
           className="mb-10"
           postalUnverified={postalPending}
-          emailUnverified={emailPending}
-          secondaryEmail={settings.secondaryEmail || CONTACT.secondaryEmail}
         />
 
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
@@ -88,30 +85,6 @@ export default async function ContactPage({ searchParams }: Props) {
             />
 
             <ul className="mt-8 space-y-4 text-sm text-muted">
-              <li>
-                <a
-                  href={`mailto:${settings.primaryEmail}`}
-                  className="inline-flex items-start gap-3 transition hover:text-forest"
-                >
-                  <Mail className="mt-0.5 h-4 w-4 text-agri" />
-                  <span>
-                    <span className="block font-medium text-forest">Email</span>
-                    {settings.primaryEmail}
-                  </span>
-                </a>
-              </li>
-              {settings.secondaryEmail || CONTACT.secondaryEmail ? (
-                <li className="inline-flex items-start gap-3">
-                  <Mail className="mt-0.5 h-4 w-4 text-wheat" />
-                  <span>
-                    <span className="block font-medium text-forest">Secondary email</span>
-                    {settings.secondaryEmail || CONTACT.secondaryEmail}
-                    {emailPending ? (
-                      <span className="mt-1 block text-xs text-soil">Pending verification</span>
-                    ) : null}
-                  </span>
-                </li>
-              ) : null}
               <li>
                 <a
                   href={`tel:${CONTACT.phoneTel}`}

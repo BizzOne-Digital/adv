@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { CafbexLogo } from "@/components/brand/CafbexLogo";
 import { Container } from "@/components/ui/Container";
 import { FOOTER_NAV, SERVICE_LINKS } from "@/lib/navigation";
@@ -9,7 +9,6 @@ export type FooterSettings = {
   organizationName?: string;
   shortName?: string;
   missionSnippet?: string;
-  email?: string;
   phone?: string;
   address?: string;
 };
@@ -22,14 +21,13 @@ export type FooterProps = {
 const DEFAULTS: Required<
   Pick<
     FooterSettings,
-    "organizationName" | "shortName" | "missionSnippet" | "email" | "phone" | "address"
+    "organizationName" | "shortName" | "missionSnippet" | "phone" | "address"
   >
 > = {
   organizationName: "Canada–Africa Farmers Business Exchange",
   shortName: "CAFBEX",
   missionSnippet:
     "Building lasting partnerships between Canada and Africa through agricultural knowledge exchange, trade, investment, and technology.",
-  email: "shambacanada@gamil.com",
   phone: "+1 437-873-7675",
   address: "163 Queen Street East, Toronto",
 };
@@ -38,7 +36,6 @@ export function Footer({ settings, className }: FooterProps) {
   const organizationName = settings?.organizationName ?? DEFAULTS.organizationName;
   const shortName = settings?.shortName ?? DEFAULTS.shortName;
   const missionSnippet = settings?.missionSnippet ?? DEFAULTS.missionSnippet;
-  const email = settings?.email ?? DEFAULTS.email;
   const phone = settings?.phone ?? DEFAULTS.phone;
   const address = settings?.address ?? DEFAULTS.address;
   const year = new Date().getFullYear();
@@ -108,15 +105,6 @@ export function Footer({ settings, className }: FooterProps) {
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-lime">Contact</h3>
             <ul className="mt-4 space-y-3 text-sm text-white/80">
-              <li>
-                <a
-                  href={`mailto:${email}`}
-                  className="inline-flex items-start gap-2 transition hover:text-lime"
-                >
-                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-lime" />
-                  {email}
-                </a>
-              </li>
               <li>
                 <a
                   href={`tel:${phone.replace(/\s+/g, "")}`}
