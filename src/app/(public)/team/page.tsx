@@ -32,7 +32,9 @@ type TeamCard = {
 
 export default async function TeamPage() {
   const dbTeam = await getTeam();
-  const confirmedBySlug = new Map(CAFBEX_TEAM.map((m) => [m.slug, m]));
+  const confirmedBySlug = new Map<string, (typeof CAFBEX_TEAM)[number]>(
+    CAFBEX_TEAM.map((m) => [m.slug, m]),
+  );
 
   const team: TeamCard[] =
     dbTeam.length > 0
