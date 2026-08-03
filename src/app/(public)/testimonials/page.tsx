@@ -12,8 +12,7 @@ import { idString } from "@/lib/serialize";
 
 export const metadata: Metadata = buildMetadata({
   title: "Testimonials",
-  description:
-    "Approved participant reflections from the CAFBEX community. Sample content is always labelled.",
+  description: "Approved participant reflections from the CAFBEX community.",
   path: "/testimonials",
 });
 
@@ -25,7 +24,7 @@ export default async function TestimonialsPage() {
       <PageHero
         eyebrow="Voices"
         title="What participants say"
-        subtitle="Only approved testimonials are shown publicly. Sample seed content is labelled and is not a verified endorsement."
+        subtitle="Only approved testimonials are shown publicly."
         showImage={false}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Testimonials" }]}
       />
@@ -50,11 +49,6 @@ export default async function TestimonialsPage() {
             {testimonials.map((t, i) => (
               <Reveal key={idString(t)} delay={i * 0.05}>
                 <li className="relative border border-border bg-white p-6 sm:p-8">
-                  {t.isSample ? (
-                    <span className="mb-3 inline-flex rounded-full bg-wheat/30 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-soil">
-                      Sample content — not a verified endorsement
-                    </span>
-                  ) : null}
                   <Quote className="mb-4 h-6 w-6 text-agri/40" aria-hidden />
                   <blockquote className="text-base leading-relaxed text-forest">
                     “{t.quote}”

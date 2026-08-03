@@ -11,7 +11,6 @@ export type TestimonialItem = {
   authorName: string;
   authorRole?: string;
   organization?: string;
-  /** When true, shows a visible sample-content label — never present as a genuine endorsement */
   isSample?: boolean;
 };
 
@@ -29,7 +28,7 @@ export function TestimonialsPreview({ testimonials, className }: TestimonialsPre
         <SectionHeading
           eyebrow="Voices"
           title="What participants say"
-          description="Published testimonials appear here. Sample seed content is always labelled and is not a genuine endorsement."
+          description="Published testimonials appear here."
           align="center"
         />
 
@@ -45,11 +44,6 @@ export function TestimonialsPreview({ testimonials, className }: TestimonialsPre
             {list.slice(0, 3).map((item, index) => (
               <Reveal key={item.id} delay={index * 0.06}>
                 <li className="relative flex h-full flex-col border border-border bg-surface p-6">
-                  {item.isSample ? (
-                    <span className="mb-3 inline-flex w-fit rounded-full bg-wheat/30 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-soil">
-                      Sample content — not a verified endorsement
-                    </span>
-                  ) : null}
                   <Quote className="h-5 w-5 text-agri/50" aria-hidden />
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-foreground/85">
                     “{item.quote}”

@@ -1,7 +1,8 @@
 "use client";
 
 import { Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { INTRO_SEEN_KEY, SITE_ENTER_EVENT } from "@/lib/site-events";
 import { cn } from "@/lib/utils";
 
 /** Zen Rhythms — Bamboo water fountain and relaxing piano (YouTube Shorts) */
@@ -60,17 +61,42 @@ function loadYouTubeApi(): Promise<void> {
   });
 }
 
+function introAlreadySeen(): boolean {
+  try {
+    return sessionStorage.getItem(INTRO_SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function SiteMusic() {
   const playerRef = useRef<YtPlayer | null>(null);
   const [ready, setReady] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [needsGesture, setNeedsGesture] = useState(false);
+
+  const startUnmuted = useCallback(() => {
+    const player = playerRef.current;
+    if (!player) {
+      setNeedsGesture(true);
+      return;
+    }
+    try {
+      player.unMute();
+      player.playVideo();
+      setMuted(false);
+      setPlaying(true);
+      setNeedsGesture(false);
+      sessionStorage.setItem(STORAGE_KEY, "0");
+    } catch {
+      setNeedsGesture(true);
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
-    const saved = sessionStorage.getItem(STORAGE_KEY);
-    const startMuted = saved === "1";
+    const userPrefersMuted = sessionStorage.getItem(STORAGE_KEY) === "1";
 
     void loadYouTubeApi().then(() => {
       if (cancelled || !window.YT?.Player) return;
@@ -90,38 +116,51 @@ export function SiteMusic() {
           rel: 0,
           loop: 1,
           playlist: VIDEO_ID,
-          mute: startMuted ? 1 : 0,
+          mute: 1,
         },
         events: {
           onReady: (e) => {
             if (cancelled) return;
             setReady(true);
-            setMuted(startMuted);
             try {
-              if (startMuted) e.target.mute();
-              else e.target.unMute();
+              e.target.mute();
               e.target.playVideo();
-              // Browsers often block unmuted autoplay — detect shortly after
+            } catch {
+              /* ignore */
+            }
+
+            // Returning visitor (intro already dismissed): try unmute unless they muted before
+            if (introAlreadySeen() && !userPrefersMuted) {
               window.setTimeout(() => {
                 if (cancelled) return;
-                const state = e.target.getPlayerState();
-                if (state !== 1) {
+                try {
+                  e.target.unMute();
+                  e.target.playVideo();
+                  const state = e.target.getPlayerState();
+                  if (state === 1) {
+                    setMuted(false);
+                    setPlaying(true);
+                    setNeedsGesture(false);
+                  } else {
+                    setMuted(true);
+                    setNeedsGesture(true);
+                  }
+                } catch {
                   setNeedsGesture(true);
-                  setPlaying(false);
-                } else {
-                  setPlaying(true);
-                  setNeedsGesture(false);
                 }
-              }, 800);
-            } catch {
+              }, 400);
+            } else if (userPrefersMuted) {
+              setMuted(true);
+              setPlaying(true);
+            } else {
+              // First visit — stay muted until "Tap to enter"
+              setMuted(true);
               setNeedsGesture(true);
             }
           },
           onStateChange: (e) => {
-            // 1 = playing, 2 = paused, 0 = ended
             if (e.data === 1) {
               setPlaying(true);
-              setNeedsGesture(false);
             } else if (e.data === 2) {
               setPlaying(false);
             } else if (e.data === 0) {
@@ -143,49 +182,39 @@ export function SiteMusic() {
     };
   }, []);
 
-  const ensurePlaying = () => {
+  useEffect(() => {
+    const onEnter = () => startUnmuted();
+    window.addEventListener(SITE_ENTER_EVENT, onEnter);
+    return () => window.removeEventListener(SITE_ENTER_EVENT, onEnter);
+  }, [startUnmuted]);
+
+  const toggleMute = () => {
     const player = playerRef.current;
     if (!player) return;
     try {
       player.playVideo();
+      if (player.isMuted() || muted) {
+        player.unMute();
+        setMuted(false);
+        setNeedsGesture(false);
+        sessionStorage.setItem(STORAGE_KEY, "0");
+      } else {
+        player.mute();
+        setMuted(true);
+        sessionStorage.setItem(STORAGE_KEY, "1");
+      }
       setPlaying(true);
-      setNeedsGesture(false);
     } catch {
       setNeedsGesture(true);
     }
   };
 
-  const toggleMute = () => {
-    const player = playerRef.current;
-    if (!player) return;
-    ensurePlaying();
-    if (player.isMuted() || muted) {
-      player.unMute();
-      setMuted(false);
-      sessionStorage.setItem(STORAGE_KEY, "0");
-    } else {
-      player.mute();
-      setMuted(true);
-      sessionStorage.setItem(STORAGE_KEY, "1");
-    }
-  };
-
-  // First tap anywhere unlocks autoplay when browser blocked it
   useEffect(() => {
-    if (!needsGesture || !ready) return;
-    const unlock = () => {
-      ensurePlaying();
-      if (!muted) {
-        try {
-          playerRef.current?.unMute();
-        } catch {
-          /* ignore */
-        }
-      }
-    };
+    if (!needsGesture || !ready || !introAlreadySeen()) return;
+    const unlock = () => startUnmuted();
     window.addEventListener("pointerdown", unlock, { once: true });
     return () => window.removeEventListener("pointerdown", unlock);
-  }, [needsGesture, ready, muted]);
+  }, [needsGesture, ready, startUnmuted]);
 
   return (
     <>
@@ -217,4 +246,5 @@ export function SiteMusic() {
   );
 }
 
+export { SITE_ENTER_EVENT } from "@/lib/site-events";
 export default SiteMusic;

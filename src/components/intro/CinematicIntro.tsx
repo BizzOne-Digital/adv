@@ -3,21 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { INTRO_SEEN_KEY, SITE_ENTER_EVENT } from "@/lib/site-events";
 import { cn } from "@/lib/utils";
-
-const STORAGE_KEY = "cafbex-intro-seen";
-const INTRO_MS = 4800;
-
-function shouldShowIntro(force: boolean, reduced: boolean): boolean {
-  if (reduced && !force) return false;
-  if (typeof window === "undefined") return false;
-  try {
-    if (sessionStorage.getItem(STORAGE_KEY) === "1" && !force) return false;
-  } catch {
-    /* ignore */
-  }
-  return true;
-}
 
 export type CinematicIntroProps = {
   force?: boolean;
@@ -25,14 +12,20 @@ export type CinematicIntroProps = {
   className?: string;
 };
 
-export function CinematicIntro({ force = false, onComplete, className }: CinematicIntroProps) {
+export function CinematicIntro({ onComplete, className }: CinematicIntroProps) {
   const reduced = useReducedMotion();
-  const [visible, setVisible] = useState(false);
+  // Start visible so the hero never flashes before the intro
+  const [visible, setVisible] = useState(true);
   const [phase, setPhase] = useState(0);
 
   const finish = useCallback(() => {
     try {
-      sessionStorage.setItem(STORAGE_KEY, "1");
+      sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    try {
+      window.dispatchEvent(new Event(SITE_ENTER_EVENT));
     } catch {
       /* ignore */
     }
@@ -41,20 +34,9 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
   }, [onComplete]);
 
   useEffect(() => {
-    const show = shouldShowIntro(force, reduced);
-    const t = requestAnimationFrame(() => {
-      if (show) setVisible(true);
-      else onComplete?.();
-    });
-    return () => cancelAnimationFrame(t);
-  }, [force, reduced, onComplete]);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    if (reduced) {
-      const t = requestAnimationFrame(() => finish());
-      return () => cancelAnimationFrame(t);
+    if (!visible || reduced) {
+      if (visible && reduced) setPhase(5);
+      return;
     }
 
     const timers = [
@@ -63,26 +45,35 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
       window.setTimeout(() => setPhase(3), 1900),
       window.setTimeout(() => setPhase(4), 2800),
       window.setTimeout(() => setPhase(5), 3600),
-      window.setTimeout(() => finish(), INTRO_MS),
     ];
 
     return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [visible, reduced, finish]);
+  }, [visible, reduced]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [visible]);
 
   return (
     <AnimatePresence>
       {visible ? (
         <motion.div
           className={cn(
-            "fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-[#1a0f08] text-white",
+            "fixed inset-0 z-[200] flex cursor-pointer flex-col items-center justify-center overflow-hidden bg-[#1a0f08] text-white",
             className,
           )}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }}
-          role="presentation"
-          aria-hidden={!visible}
+          role="dialog"
+          aria-modal="true"
+          aria-label="CAFBEX intro"
+          onClick={finish}
         >
-          {/* Soil base */}
           <div
             className="absolute inset-0"
             style={{
@@ -91,18 +82,23 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
             }}
           />
 
-          {/* Seed glow */}
           <motion.div
             className="absolute left-1/2 top-[52%] h-4 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime"
             animate={
               phase >= 1
-                ? { scale: [1, 1.4, 1.1], boxShadow: ["0 0 0 rgba(198,255,78,0)", "0 0 40px rgba(198,255,78,0.8)", "0 0 24px rgba(198,255,78,0.55)"] }
+                ? {
+                    scale: [1, 1.4, 1.1],
+                    boxShadow: [
+                      "0 0 0 rgba(198,255,78,0)",
+                      "0 0 40px rgba(198,255,78,0.8)",
+                      "0 0 24px rgba(198,255,78,0.55)",
+                    ],
+                  }
                 : { scale: 0.4, opacity: 0.4 }
             }
             transition={{ duration: 0.9 }}
           />
 
-          {/* Roots */}
           <svg
             className="pointer-events-none absolute left-1/2 top-[52%] h-[55vmin] w-[70vmin] -translate-x-1/2"
             viewBox="0 0 400 300"
@@ -123,15 +119,12 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
                 strokeWidth="1.5"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={
-                  phase >= 2
-                    ? { pathLength: 1, opacity: 1 }
-                    : { pathLength: 0, opacity: 0 }
+                  phase >= 2 ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }
                 }
                 transition={{ duration: 0.9, delay: i * 0.06 }}
               />
             ))}
 
-            {/* Network lines */}
             {phase >= 3 &&
               [
                 [60, 120, 340, 160],
@@ -154,7 +147,6 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
               ))}
           </svg>
 
-          {/* Canada–Africa conceptual maps + route */}
           <svg
             className="pointer-events-none absolute inset-0 h-full w-full"
             viewBox="0 0 1000 600"
@@ -193,7 +185,6 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
             />
           </svg>
 
-          {/* Brand reveal */}
           <div className="relative z-10 px-6 text-center">
             <motion.p
               className="text-3xl font-semibold tracking-[0.18em] sm:text-5xl sm:tracking-[0.28em] md:text-6xl"
@@ -213,13 +204,14 @@ export function CinematicIntro({ force = false, onComplete, className }: Cinemat
             </motion.p>
           </div>
 
-          <button
-            type="button"
-            onClick={finish}
-            className="absolute bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-4 z-20 rounded-full border border-white/25 bg-white/5 px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white sm:right-6"
+          <motion.p
+            className="absolute bottom-[max(2.5rem,env(safe-area-inset-bottom))] left-0 right-0 z-20 text-center text-xs font-semibold uppercase tracking-[0.28em] text-lime/90 sm:text-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.45, 1, 0.45] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
           >
-            Skip
-          </button>
+            Tap to enter
+          </motion.p>
         </motion.div>
       ) : null}
     </AnimatePresence>
