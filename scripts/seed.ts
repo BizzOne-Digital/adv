@@ -71,7 +71,7 @@ async function seedSettings() {
   await SiteSettings.create({
     organizationName: "Canada–Africa Farmers Business Exchange",
     shortName: "CAFBEX",
-    primaryEmail: "shambacanada@gamil.com",
+    primaryEmail: "farm@cafbex.ca",
     secondaryEmail: "",
     phone: "+1 437-873-7675",
     address: "163 Queen Street East",
@@ -84,8 +84,8 @@ async function seedSettings() {
     introEnabled: true,
     introText: "Connecting Agriculture. Growing Opportunity.",
     copyright: "© CAFBEX. All rights reserved.",
-    contactRecipient: "shambacanada@gamil.com",
-    bookingRecipient: "shambacanada@gamil.com",
+    contactRecipient: "farm@cafbex.ca",
+    bookingRecipient: "farm@cafbex.ca",
     defaultSeo: {
       title: "CAFBEX — Canada–Africa Farmers Business Exchange",
       description:

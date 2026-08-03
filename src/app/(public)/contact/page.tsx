@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Accordion } from "@/components/ui/Accordion";
 import { Container } from "@/components/ui/Container";
@@ -85,6 +85,18 @@ export default async function ContactPage({ searchParams }: Props) {
             />
 
             <ul className="mt-8 space-y-4 text-sm text-muted">
+              <li>
+                <a
+                  href={`mailto:${CONTACT.primaryEmail}`}
+                  className="inline-flex items-start gap-3 transition hover:text-forest"
+                >
+                  <Mail className="mt-0.5 h-4 w-4 text-agri" />
+                  <span>
+                    <span className="block font-medium text-forest">Email</span>
+                    {CONTACT.primaryEmail}
+                  </span>
+                </a>
+              </li>
               <li>
                 <a
                   href={`tel:${CONTACT.phoneTel}`}

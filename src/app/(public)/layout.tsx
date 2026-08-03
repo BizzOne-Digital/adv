@@ -1,7 +1,7 @@
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SiteMusic } from "@/components/layout/SiteMusic";
-import { formatFullAddress } from "@/lib/contact";
+import { CONTACT, formatFullAddress } from "@/lib/contact";
 import { getSettings } from "@/lib/data";
 
 export default async function PublicLayout({
@@ -25,6 +25,7 @@ export default async function PublicLayout({
           organizationName: settings.organizationName,
           shortName: settings.shortName,
           missionSnippet: settings.mission,
+          email: CONTACT.primaryEmail,
           phone: settings.phone,
           address: formatFullAddress(settings),
         }}
