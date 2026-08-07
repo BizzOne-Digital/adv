@@ -3,22 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  CalendarDays,
-  ClipboardList,
   FileText,
-  FolderOpen,
   HelpCircle,
   ImageIcon,
-  Inbox,
   LayoutDashboard,
+  Leaf,
   MessageSquareQuote,
   Newspaper,
-  Package,
   Settings,
   ShoppingBag,
-  Users,
-  Activity,
-  Leaf,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -27,17 +20,11 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/pages", label: "Pages", icon: FileText },
   { href: "/admin/services", label: "Services", icon: Leaf },
-  { href: "/admin/activities", label: "Activities", icon: Activity },
-  { href: "/admin/events", label: "Events", icon: CalendarDays },
-  { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
-  { href: "/admin/team", label: "Team", icon: Users },
-  { href: "/admin/bookings", label: "Bookings", icon: ClipboardList },
-  { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/pricing", label: "Pricing", icon: ShoppingBag },
+  { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
-  { href: "/admin/blogs", label: "Blog", icon: Newspaper },
-  { href: "/admin/inquiries", label: "Inquiries", icon: Inbox },
-  { href: "/admin/media", label: "Media", icon: FolderOpen },
+  { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },
+  { href: "/admin/blogs", label: "Blogs", icon: Newspaper },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ] as const;
 
@@ -76,9 +63,10 @@ export function AdminSidebar({ open = false, onClose }: AdminSidebarProps) {
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const active = "exact" in item && item.exact
-              ? pathname === item.href
-              : pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active =
+              "exact" in item && item.exact
+                ? pathname === item.href
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
               <Link
@@ -104,7 +92,6 @@ export function AdminSidebar({ open = false, onClose }: AdminSidebarProps) {
             className="inline-flex items-center gap-2 text-xs text-white/50 transition hover:text-lime"
             onClick={onClose}
           >
-            <HelpCircle className="h-3.5 w-3.5" />
             View public site
           </Link>
         </div>

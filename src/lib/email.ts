@@ -1,15 +1,39 @@
+import nodemailer from "nodemailer";
 import { Resend } from "resend";
 
 import type { Booking, Inquiry } from "@/types";
 
 const FROM_EMAIL =
-  process.env.EMAIL_FROM || "CAFBEX <onboarding@resend.dev>";
+  process.env.EMAIL_FROM || "CAFBEX <farm@cafbex.ca>";
+
+function smtpConfigured(): boolean {
+  return Boolean(
+    process.env.SMTP_HOST &&
+      process.env.SMTP_USER &&
+      process.env.SMTP_PASSWORD,
+  );
+}
+
+function getSmtpTransporter() {
+  const port = Number(process.env.SMTP_PORT || 465);
+  const secure =
+    process.env.SMTP_SECURE === "true" ||
+    (!process.env.SMTP_SECURE && port === 465);
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port,
+    secure,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+}
 
 function getResendClient(): Resend | null {
   const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    return null;
-  }
+  if (!apiKey) return null;
   return new Resend(apiKey);
 }
 
@@ -18,11 +42,26 @@ async function sendEmail(options: {
   subject: string;
   html: string;
 }): Promise<{ sent: boolean; id?: string }> {
-  const client = getResendClient();
+  if (smtpConfigured()) {
+    try {
+      const transporter = getSmtpTransporter();
+      const info = await transporter.sendMail({
+        from: FROM_EMAIL,
+        to: Array.isArray(options.to) ? options.to.join(", ") : options.to,
+        subject: options.subject,
+        html: options.html,
+      });
+      return { sent: true, id: info.messageId };
+    } catch (error) {
+      console.error("[email] SMTP send failed:", error);
+      return { sent: false };
+    }
+  }
 
+  const client = getResendClient();
   if (!client) {
     console.info(
-      "[email] RESEND_API_KEY not set — skipping email:",
+      "[email] No SMTP or RESEND_API_KEY configured — skipping:",
       options.subject,
     );
     return { sent: false };
@@ -36,7 +75,7 @@ async function sendEmail(options: {
   });
 
   if (error) {
-    console.error("[email] Failed to send:", error);
+    console.error("[email] Resend failed:", error);
     return { sent: false };
   }
 
@@ -94,6 +133,7 @@ export async function sendAdminInquiryNotification(
   const to =
     recipient ||
     process.env.CONTACT_RECIPIENT_EMAIL ||
+    process.env.CONTACT_TO ||
     process.env.ADMIN_EMAIL;
 
   if (!to) {
@@ -188,7 +228,9 @@ export async function sendAdminBookingNotification(
 ): Promise<{ sent: boolean; id?: string }> {
   const to =
     recipient ||
+    process.env.BOOKING_TO ||
     process.env.CONTACT_RECIPIENT_EMAIL ||
+    process.env.CONTACT_TO ||
     process.env.ADMIN_EMAIL;
 
   if (!to) {

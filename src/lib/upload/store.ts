@@ -4,6 +4,8 @@ import {
   UPLOAD_FOLDERS,
   type UploadFolder,
 } from "@/models/StoredUpload";
+import { mkdir, writeFile } from "fs/promises";
+import path from "path";
 
 export const MAX_UPLOAD_BYTES = Math.floor(4.5 * 1024 * 1024);
 
@@ -109,6 +111,15 @@ export async function saveFolderUpload(
     },
     { upsert: true, returnDocument: "after", setDefaultsOnInsert: true },
   );
+
+  // Also mirror to public/uploads for local disk access (ignored on read-only hosts)
+  try {
+    const diskDir = path.join(process.cwd(), "public", "uploads", folder);
+    await mkdir(diskDir, { recursive: true });
+    await writeFile(path.join(diskDir, filename), buffer);
+  } catch (error) {
+    console.warn("[upload] Disk mirror skipped:", error);
+  }
 
   return {
     url: buildUploadUrl(folder, filename),

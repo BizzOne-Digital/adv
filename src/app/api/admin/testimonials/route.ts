@@ -51,7 +51,7 @@ export async function POST(request: Request) {
       request,
     });
     if (doc.approved) {
-      revalidateContent({ tags: [CACHE_TAGS.testimonials], paths: ["/"] });
+      revalidateContent({ tags: [CACHE_TAGS.testimonials], paths: ["/", "/testimonials"] });
     }
     return jsonOk(doc, "Testimonial created", 201);
   } catch (error) {

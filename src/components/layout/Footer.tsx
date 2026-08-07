@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import type { ReactNode } from "react";
 import { CafbexLogo } from "@/components/brand/CafbexLogo";
 import { Container } from "@/components/ui/Container";
 import { CONTACT } from "@/lib/contact";
 import { FOOTER_NAV, SERVICE_LINKS } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
+import type { SocialLinks } from "@/types";
 
 export type FooterSettings = {
   organizationName?: string;
@@ -13,6 +15,8 @@ export type FooterSettings = {
   email?: string;
   phone?: string;
   address?: string;
+  copyright?: string;
+  socialLinks?: SocialLinks;
 };
 
 export type FooterProps = {
@@ -35,14 +39,31 @@ const DEFAULTS: Required<
   address: "163 Queen Street East, Toronto",
 };
 
+function SocialIcon({ href, label, children }: { href: string; label: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white/70 transition hover:border-lime hover:text-lime"
+    >
+      {children}
+    </a>
+  );
+}
+
 export function Footer({ settings, className }: FooterProps) {
   const organizationName = settings?.organizationName ?? DEFAULTS.organizationName;
   const shortName = settings?.shortName ?? DEFAULTS.shortName;
   const missionSnippet = settings?.missionSnippet ?? DEFAULTS.missionSnippet;
-  const email = settings?.email ?? DEFAULTS.email;
+  const email = settings?.email || DEFAULTS.email;
   const phone = settings?.phone ?? DEFAULTS.phone;
   const address = settings?.address ?? DEFAULTS.address;
+  const social = settings?.socialLinks;
   const year = new Date().getFullYear();
+  const copyright =
+    settings?.copyright || `© ${year} ${shortName}. All rights reserved.`;
 
   const mainLinks = FOOTER_NAV.filter((l) => l.href !== "/services");
 
@@ -64,6 +85,39 @@ export function Footer({ settings, className }: FooterProps) {
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70">
               {missionSnippet}
             </p>
+            {(social?.linkedin ||
+              social?.facebook ||
+              social?.instagram ||
+              social?.youtube ||
+              social?.twitter) && (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {social.linkedin ? (
+                  <SocialIcon href={social.linkedin} label="LinkedIn">
+                    <span className="text-[10px] font-semibold">in</span>
+                  </SocialIcon>
+                ) : null}
+                {social.facebook ? (
+                  <SocialIcon href={social.facebook} label="Facebook">
+                    <span className="text-[10px] font-semibold">f</span>
+                  </SocialIcon>
+                ) : null}
+                {social.instagram ? (
+                  <SocialIcon href={social.instagram} label="Instagram">
+                    <span className="text-[10px] font-semibold">IG</span>
+                  </SocialIcon>
+                ) : null}
+                {social.youtube ? (
+                  <SocialIcon href={social.youtube} label="YouTube">
+                    <span className="text-[10px] font-semibold">YT</span>
+                  </SocialIcon>
+                ) : null}
+                {social.twitter ? (
+                  <SocialIcon href={social.twitter} label="X / Twitter">
+                    <span className="text-xs font-bold">X</span>
+                  </SocialIcon>
+                ) : null}
+              </div>
+            )}
           </div>
 
           <div>
@@ -143,9 +197,7 @@ export function Footer({ settings, className }: FooterProps) {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/15 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} {shortName}. All rights reserved.
-          </p>
+          <p>{copyright.includes("©") ? copyright : `© ${year} ${copyright}`}</p>
           <p className="max-w-md sm:text-right">
             Connecting Agriculture. Growing Opportunity.
           </p>

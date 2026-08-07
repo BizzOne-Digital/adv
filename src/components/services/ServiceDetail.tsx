@@ -19,7 +19,14 @@ export type ServiceDetailProps = {
 };
 
 export function ServiceDetail({ service }: ServiceDetailProps) {
-  const images = serviceImageSlots(service.imageFolder);
+  const fallbackImages = serviceImageSlots(service.imageFolder);
+  const images: typeof fallbackImages =
+    service.galleryUrls && service.galleryUrls.length > 0
+      ? ([0, 1, 2, 3, 4] as const).map((i) => ({
+          src: service.galleryUrls![i] || fallbackImages[i].src,
+          alt: `${service.name} image ${i + 1}`,
+        })) as typeof fallbackImages
+      : fallbackImages;
   const related = SERVICE_LINKS.filter((s) =>
     service.relatedServiceSlugs.includes(s.href.replace("/services/", "")),
   );
@@ -30,7 +37,9 @@ export function ServiceDetail({ service }: ServiceDetailProps) {
         eyebrow="Service"
         title={service.heroHeading}
         subtitle={service.heroSubheading}
-        imageSrc={`/images/${service.imageFolder}/hero.jpg`}
+        imageSrc={
+          service.heroImageUrl || `/images/${service.imageFolder}/hero.jpg`
+        }
         imageAlt={service.name}
         breadcrumbs={[
           { label: "Home", href: "/" },

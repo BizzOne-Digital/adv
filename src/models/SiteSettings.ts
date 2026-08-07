@@ -52,7 +52,7 @@ const SiteSettingsSchema = new Schema(
       required: true,
       trim: true,
       lowercase: true,
-      default: "shambacanada@gamil.com",
+      default: "farm@cafbex.ca",
     },
     secondaryEmail: {
       type: String,
@@ -143,14 +143,14 @@ const SiteSettingsSchema = new Schema(
       required: true,
       trim: true,
       lowercase: true,
-      default: "shambacanada@gamil.com",
+      default: "farm@cafbex.ca",
     },
     bookingRecipient: {
       type: String,
       required: true,
       trim: true,
       lowercase: true,
-      default: "shambacanada@gamil.com",
+      default: "farm@cafbex.ca",
     },
     dataVerificationWarnings: {
       type: DataVerificationWarningsSchema,

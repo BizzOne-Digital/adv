@@ -25,9 +25,11 @@ export default async function PublicLayout({
           organizationName: settings.organizationName,
           shortName: settings.shortName,
           missionSnippet: settings.mission,
-          email: CONTACT.primaryEmail,
+          email: settings.primaryEmail || CONTACT.primaryEmail,
           phone: settings.phone,
           address: formatFullAddress(settings),
+          copyright: settings.copyright,
+          socialLinks: settings.socialLinks,
         }}
       />
       <SiteMusic />

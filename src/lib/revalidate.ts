@@ -46,7 +46,7 @@ export function revalidateContent(options: RevalidateOptions): void {
 export function revalidateSettings(): void {
   revalidateContent({
     tags: [CACHE_TAGS.settings],
-    paths: ["/", "/contact", "/booking", "/about"],
+    paths: ["/", "/contact", "/booking", "/about", "/faq", "/testimonials"],
   });
 }
 

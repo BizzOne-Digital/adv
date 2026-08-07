@@ -87,19 +87,19 @@ export default async function ContactPage({ searchParams }: Props) {
             <ul className="mt-8 space-y-4 text-sm text-muted">
               <li>
                 <a
-                  href={`mailto:${CONTACT.primaryEmail}`}
+                  href={`mailto:${settings.primaryEmail || CONTACT.primaryEmail}`}
                   className="inline-flex items-start gap-3 transition hover:text-forest"
                 >
                   <Mail className="mt-0.5 h-4 w-4 text-agri" />
                   <span>
                     <span className="block font-medium text-forest">Email</span>
-                    {CONTACT.primaryEmail}
+                    {settings.primaryEmail || CONTACT.primaryEmail}
                   </span>
                 </a>
               </li>
               <li>
                 <a
-                  href={`tel:${CONTACT.phoneTel}`}
+                  href={`tel:${(settings.phone || CONTACT.phone).replace(/\s+/g, "")}`}
                   className="inline-flex items-start gap-3 transition hover:text-forest"
                 >
                   <Phone className="mt-0.5 h-4 w-4 text-agri" />

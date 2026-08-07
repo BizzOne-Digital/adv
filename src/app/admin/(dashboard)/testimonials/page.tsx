@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -30,29 +31,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    const id = requestAnimationFrame(() => {
-      void (async () => {
-        setLoading(true);
-        try {
-          const data = await adminFetch<{ items: Testimonial[] }>(
-            "/api/admin/testimonials?limit=100",
-          );
-          if (!cancelled) setItems(data.items);
-        } catch (err) {
-          if (!cancelled) {
-            toast.error(err instanceof Error ? err.message : "Failed to load");
-          }
-        } finally {
-          if (!cancelled) setLoading(false);
-        }
-      })();
-    });
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(id);
-    };
-  }, []);
+    void load();
+  }, [load]);
 
   const patch = async (row: Testimonial, patchData: Partial<Testimonial>) => {
     try {
@@ -78,13 +58,33 @@ export default function Page() {
     }
   };
 
+  const remove = async () => {
+    if (!deleteId) return;
+    try {
+      await adminFetch(`/api/admin/testimonials/${deleteId}`, { method: "DELETE" });
+      toast.success("Deleted");
+      setDeleteId(null);
+      await load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Delete failed");
+    }
+  };
+
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-xl font-semibold text-white">Testimonials</h2>
-        <p className="mt-1 text-sm text-white/45">
-          Approve and feature authentic quotes. Nothing is seeded as published.
-        </p>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Testimonials</h2>
+          <p className="mt-1 text-sm text-white/45">
+            Add, edit, approve, and feature quotes shown on the public site.
+          </p>
+        </div>
+        <Link
+          href="/admin/testimonials/new"
+          className="rounded-md bg-lime px-4 py-2 text-sm font-semibold text-forest"
+        >
+          Add testimonial
+        </Link>
       </div>
 
       {loading ? (
@@ -92,7 +92,15 @@ export default function Page() {
       ) : items.length === 0 ? (
         <EmptyAdminState
           title="No testimonials"
-          description="When submissions arrive, approve them here before they appear publicly."
+          description="Create a testimonial to show quotes on the home and testimonials pages."
+          action={
+            <Link
+              href="/admin/testimonials/new"
+              className="rounded-md bg-lime px-4 py-2 text-sm font-semibold text-forest"
+            >
+              Add testimonial
+            </Link>
+          }
         />
       ) : (
         <DataTable
@@ -105,45 +113,54 @@ export default function Page() {
               render: (r) => (
                 <div>
                   <p className="font-medium">{r.name}</p>
-                  <p className="line-clamp-2 text-xs text-white/45">{r.quote}</p>
+                  <p className="text-xs text-white/40">
+                    {[r.role, r.organization].filter(Boolean).join(" · ")}
+                  </p>
                 </div>
               ),
             },
             {
-              key: "approved",
-              header: "Approved",
+              key: "quote",
+              header: "Quote",
               render: (r) => (
-                <StatusBadge status={r.approved ? "approved" : "pending"} />
+                <p className="max-w-md truncate text-white/70">{r.quote}</p>
               ),
             },
             {
-              key: "featured",
-              header: "Featured",
-              render: (r) => (r.featured ? "Yes" : "No"),
+              key: "approved",
+              header: "Status",
+              render: (r) => (
+                <StatusBadge status={r.approved ? "active" : "inactive"} />
+              ),
             },
             {
               key: "actions",
-              header: "",
-              className: "text-right",
+              header: "Actions",
               render: (r) => (
-                <div className="flex justify-end gap-2 text-xs">
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={`/admin/testimonials/${r._id}`}
+                    className="text-xs text-lime hover:underline"
+                  >
+                    Edit
+                  </Link>
                   <button
                     type="button"
-                    className="text-lime hover:underline"
+                    className="text-xs text-white/60 hover:text-white"
                     onClick={() => void patch(r, { approved: !r.approved })}
                   >
                     {r.approved ? "Unapprove" : "Approve"}
                   </button>
                   <button
                     type="button"
-                    className="text-white/70 hover:underline"
+                    className="text-xs text-white/60 hover:text-white"
                     onClick={() => void patch(r, { featured: !r.featured })}
                   >
                     {r.featured ? "Unfeature" : "Feature"}
                   </button>
                   <button
                     type="button"
-                    className="text-red-300 hover:underline"
+                    className="text-xs text-red-300 hover:text-red-200"
                     onClick={() => setDeleteId(r._id)}
                   >
                     Delete
@@ -156,23 +173,12 @@ export default function Page() {
       )}
 
       <ConfirmDialog
-        open={!!deleteId}
+        open={Boolean(deleteId)}
         title="Delete testimonial?"
         description="This cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => void remove()}
         onCancel={() => setDeleteId(null)}
-        onConfirm={async () => {
-          if (!deleteId) return;
-          try {
-            await adminFetch(`/api/admin/testimonials/${deleteId}`, {
-              method: "DELETE",
-            });
-            toast.success("Deleted");
-            setDeleteId(null);
-            await load();
-          } catch (err) {
-            toast.error(err instanceof Error ? err.message : "Delete failed");
-          }
-        }}
       />
     </div>
   );

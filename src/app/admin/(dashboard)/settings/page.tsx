@@ -131,6 +131,51 @@ export default function SettingsPage() {
         />
       </Section>
 
+      <Section title="Social links">
+        <Field
+          label="LinkedIn"
+          value={form.socialLinks?.linkedin || ""}
+          onChange={(v) =>
+            set("socialLinks", { ...form.socialLinks, linkedin: v })
+          }
+        />
+        <Field
+          label="Facebook"
+          value={form.socialLinks?.facebook || ""}
+          onChange={(v) =>
+            set("socialLinks", { ...form.socialLinks, facebook: v })
+          }
+        />
+        <Field
+          label="Instagram"
+          value={form.socialLinks?.instagram || ""}
+          onChange={(v) =>
+            set("socialLinks", { ...form.socialLinks, instagram: v })
+          }
+        />
+        <Field
+          label="YouTube"
+          value={form.socialLinks?.youtube || ""}
+          onChange={(v) =>
+            set("socialLinks", { ...form.socialLinks, youtube: v })
+          }
+        />
+        <Field
+          label="X / Twitter"
+          value={form.socialLinks?.twitter || ""}
+          onChange={(v) =>
+            set("socialLinks", { ...form.socialLinks, twitter: v })
+          }
+        />
+        <Field
+          label="Website"
+          value={form.socialLinks?.website || ""}
+          onChange={(v) =>
+            set("socialLinks", { ...form.socialLinks, website: v })
+          }
+        />
+      </Section>
+
       <Section title="Address">
         <Field
           label="Address"

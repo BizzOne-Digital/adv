@@ -15,6 +15,10 @@ export type ServiceContent = {
   faqs: { question: string; answer: string }[];
   relatedServiceSlugs: string[];
   imageFolder: string;
+  /** CMS override for detail hero */
+  heroImageUrl?: string;
+  /** CMS gallery overrides (falls back to static slots) */
+  galleryUrls?: string[];
 };
 
 const CONTENT: Record<string, Omit<ServiceContent, "slug" | "name" | "summary">> = {
@@ -438,6 +442,8 @@ export function resolveServicePage(
         ? dbService.relatedServiceSlugs
         : fallback?.relatedServiceSlugs || [],
     imageFolder: fallback?.imageFolder || `services/${slug}`,
+    heroImageUrl: dbService.heroImage?.url || undefined,
+    galleryUrls: dbService.gallery?.map((g) => g.url).filter(Boolean) || undefined,
   };
 }
 

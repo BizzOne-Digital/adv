@@ -30,12 +30,17 @@ export default async function ServicesPage() {
           href: `/services/${s.slug}`,
           summary: s.summary,
           slug: s.slug,
+          imageSrc:
+            s.heroImage?.url ||
+            s.gallery?.[0]?.url ||
+            `/images/services/${s.slug}/01.jpg`,
         }))
       : staticServices.map((s) => ({
           name: s.name,
           href: `/services/${s.slug}`,
           summary: s.summary,
           slug: s.slug,
+          imageSrc: `/images/services/${s.slug}/01.jpg`,
         }));
 
   const images = pageImages("services", [
@@ -71,7 +76,7 @@ export default async function ServicesPage() {
                 className="group flex h-full flex-col overflow-hidden border border-border bg-white transition hover:border-agri/40"
               >
                 <ImagePlaceholder
-                  src={`/images/services/${service.slug}/01.jpg`}
+                  src={service.imageSrc}
                   alt={service.name}
                   className="aspect-[16/10]"
                   sizes="(max-width: 1024px) 50vw, 25vw"
